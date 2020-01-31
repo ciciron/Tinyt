@@ -48,13 +48,37 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/universum/projects/tinyt
+CMAKE_SOURCE_DIR = /home/mdn/projects/tinyt
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/universum/projects/tinyt
+CMAKE_BINARY_DIR = /home/mdn/projects/tinyt
 
 #=============================================================================
 # Targets provided globally by CMake.
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
@@ -78,11 +102,44 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/universum/projects/tinyt/CMakeFiles /home/universum/projects/tinyt/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mdn/projects/tinyt/CMakeFiles /home/mdn/projects/tinyt/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/universum/projects/tinyt/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mdn/projects/tinyt/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +168,82 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named TinyTestServer
+# Target rules for targets named tinyts
 
 # Build rule for target.
-TinyTestServer: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 TinyTestServer
-.PHONY : TinyTestServer
+tinyts: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tinyts
+.PHONY : tinyts
 
 # fast build rule for target.
-TinyTestServer/fast:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/build
-.PHONY : TinyTestServer/fast
+tinyts/fast:
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/build
+.PHONY : tinyts/fast
+
+#=============================================================================
+# Target rules for targets named tinysrv
+
+# Build rule for target.
+tinysrv: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tinysrv
+.PHONY : tinysrv
+
+# fast build rule for target.
+tinysrv/fast:
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/build
+.PHONY : tinysrv/fast
+
+#=============================================================================
+# Target rules for targets named uninstall
+
+# Build rule for target.
+uninstall: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 uninstall
+.PHONY : uninstall
+
+# fast build rule for target.
+uninstall/fast:
+	$(MAKE) -f CMakeFiles/uninstall.dir/build.make CMakeFiles/uninstall.dir/build
+.PHONY : uninstall/fast
+
+#=============================================================================
+# Target rules for targets named clang-tidy-check
+
+# Build rule for target.
+clang-tidy-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 clang-tidy-check
+.PHONY : clang-tidy-check
+
+# fast build rule for target.
+clang-tidy-check/fast:
+	$(MAKE) -f CMakeFiles/clang-tidy-check.dir/build.make CMakeFiles/clang-tidy-check.dir/build
+.PHONY : clang-tidy-check/fast
+
+#=============================================================================
+# Target rules for targets named srvc_t
+
+# Build rule for target.
+srvc_t: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 srvc_t
+.PHONY : srvc_t
+
+# fast build rule for target.
+srvc_t/fast:
+	$(MAKE) -f test/CMakeFiles/srvc_t.dir/build.make test/CMakeFiles/srvc_t.dir/build
+.PHONY : srvc_t/fast
+
+#=============================================================================
+# Target rules for targets named realm_t
+
+# Build rule for target.
+realm_t: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 realm_t
+.PHONY : realm_t
+
+# fast build rule for target.
+realm_t/fast:
+	$(MAKE) -f test/CMakeFiles/realm_t.dir/build.make test/CMakeFiles/realm_t.dir/build
+.PHONY : realm_t/fast
 
 src/Abuser.o: src/Abuser.cpp.o
 
@@ -129,7 +251,7 @@ src/Abuser.o: src/Abuser.cpp.o
 
 # target to build an object file
 src/Abuser.cpp.o:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Abuser.cpp.o
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/src/Abuser.cpp.o
 .PHONY : src/Abuser.cpp.o
 
 src/Abuser.i: src/Abuser.cpp.i
@@ -138,7 +260,7 @@ src/Abuser.i: src/Abuser.cpp.i
 
 # target to preprocess a source file
 src/Abuser.cpp.i:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Abuser.cpp.i
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/src/Abuser.cpp.i
 .PHONY : src/Abuser.cpp.i
 
 src/Abuser.s: src/Abuser.cpp.s
@@ -147,7 +269,7 @@ src/Abuser.s: src/Abuser.cpp.s
 
 # target to generate assembly for a file
 src/Abuser.cpp.s:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Abuser.cpp.s
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/src/Abuser.cpp.s
 .PHONY : src/Abuser.cpp.s
 
 src/Commands.o: src/Commands.cpp.o
@@ -156,7 +278,7 @@ src/Commands.o: src/Commands.cpp.o
 
 # target to build an object file
 src/Commands.cpp.o:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Commands.cpp.o
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/Commands.cpp.o
 .PHONY : src/Commands.cpp.o
 
 src/Commands.i: src/Commands.cpp.i
@@ -165,7 +287,7 @@ src/Commands.i: src/Commands.cpp.i
 
 # target to preprocess a source file
 src/Commands.cpp.i:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Commands.cpp.i
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/Commands.cpp.i
 .PHONY : src/Commands.cpp.i
 
 src/Commands.s: src/Commands.cpp.s
@@ -174,7 +296,7 @@ src/Commands.s: src/Commands.cpp.s
 
 # target to generate assembly for a file
 src/Commands.cpp.s:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Commands.cpp.s
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/Commands.cpp.s
 .PHONY : src/Commands.cpp.s
 
 src/Main.o: src/Main.cpp.o
@@ -183,7 +305,7 @@ src/Main.o: src/Main.cpp.o
 
 # target to build an object file
 src/Main.cpp.o:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Main.cpp.o
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/src/Main.cpp.o
 .PHONY : src/Main.cpp.o
 
 src/Main.i: src/Main.cpp.i
@@ -192,7 +314,7 @@ src/Main.i: src/Main.cpp.i
 
 # target to preprocess a source file
 src/Main.cpp.i:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Main.cpp.i
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/src/Main.cpp.i
 .PHONY : src/Main.cpp.i
 
 src/Main.s: src/Main.cpp.s
@@ -201,7 +323,7 @@ src/Main.s: src/Main.cpp.s
 
 # target to generate assembly for a file
 src/Main.cpp.s:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Main.cpp.s
+	$(MAKE) -f CMakeFiles/tinyts.dir/build.make CMakeFiles/tinyts.dir/src/Main.cpp.s
 .PHONY : src/Main.cpp.s
 
 src/Realm.o: src/Realm.cpp.o
@@ -210,7 +332,7 @@ src/Realm.o: src/Realm.cpp.o
 
 # target to build an object file
 src/Realm.cpp.o:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Realm.cpp.o
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/Realm.cpp.o
 .PHONY : src/Realm.cpp.o
 
 src/Realm.i: src/Realm.cpp.i
@@ -219,7 +341,7 @@ src/Realm.i: src/Realm.cpp.i
 
 # target to preprocess a source file
 src/Realm.cpp.i:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Realm.cpp.i
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/Realm.cpp.i
 .PHONY : src/Realm.cpp.i
 
 src/Realm.s: src/Realm.cpp.s
@@ -228,7 +350,7 @@ src/Realm.s: src/Realm.cpp.s
 
 # target to generate assembly for a file
 src/Realm.cpp.s:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/Realm.cpp.s
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/Realm.cpp.s
 .PHONY : src/Realm.cpp.s
 
 src/ServerImpl.o: src/ServerImpl.cpp.o
@@ -237,7 +359,7 @@ src/ServerImpl.o: src/ServerImpl.cpp.o
 
 # target to build an object file
 src/ServerImpl.cpp.o:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/ServerImpl.cpp.o
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/ServerImpl.cpp.o
 .PHONY : src/ServerImpl.cpp.o
 
 src/ServerImpl.i: src/ServerImpl.cpp.i
@@ -246,7 +368,7 @@ src/ServerImpl.i: src/ServerImpl.cpp.i
 
 # target to preprocess a source file
 src/ServerImpl.cpp.i:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/ServerImpl.cpp.i
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/ServerImpl.cpp.i
 .PHONY : src/ServerImpl.cpp.i
 
 src/ServerImpl.s: src/ServerImpl.cpp.s
@@ -255,7 +377,7 @@ src/ServerImpl.s: src/ServerImpl.cpp.s
 
 # target to generate assembly for a file
 src/ServerImpl.cpp.s:
-	$(MAKE) -f CMakeFiles/TinyTestServer.dir/build.make CMakeFiles/TinyTestServer.dir/src/ServerImpl.cpp.s
+	$(MAKE) -f CMakeFiles/tinysrv.dir/build.make CMakeFiles/tinysrv.dir/src/ServerImpl.cpp.s
 .PHONY : src/ServerImpl.cpp.s
 
 # Help Target
@@ -264,9 +386,19 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/strip"
+	@echo "... install"
 	@echo "... rebuild_cache"
-	@echo "... TinyTestServer"
+	@echo "... tinyts"
 	@echo "... edit_cache"
+	@echo "... list_install_components"
+	@echo "... tinysrv"
+	@echo "... uninstall"
+	@echo "... clang-tidy-check"
+	@echo "... install/local"
+	@echo "... test"
+	@echo "... srvc_t"
+	@echo "... realm_t"
 	@echo "... src/Abuser.o"
 	@echo "... src/Abuser.i"
 	@echo "... src/Abuser.s"

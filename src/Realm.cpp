@@ -2,8 +2,6 @@
 #include <iostream>
 #include "realm.h"
 
-extern int verbose_flag;
-
 Realm::Realm()
 {
     realm.reserve(AreaX * AreaY);
@@ -11,9 +9,6 @@ Realm::Realm()
     FillRealm(baseGrid, 3);
 }
 
-Realm::~Realm()
-{
-}
 
 //Get CELL-ptr from realm
 PCell Realm::Cell(int X, int Y)
@@ -40,38 +35,6 @@ bool Realm::BestPlacement(MoveableObject *mo, int desireX, int desireY)
         }
     } 
     return false;
-}
-
-bool Realm::Test()
-{
-    std::deque<PCell> queTest;
-    bool wallsPassed = true;
-    queTest.push_back(Cell(baseGrid,baseGrid));
-    queTest.push_back(Cell(2*baseGrid,2*baseGrid));
-    queTest.push_back(Cell(3*baseGrid,3*baseGrid));
-    queTest.push_back(Cell(AreaX - baseGrid,baseGrid));
-    queTest.push_back(Cell(baseGrid,AreaY - baseGrid));
-    queTest.push_back(Cell(AreaX - baseGrid, AreaY - baseGrid));
-    while (!queTest.empty())
-    {
-        PCell cell = queTest.front();
-        if (!cell)
-        {
-            if (verbose_flag)
-                puts("Tinyt: Nullptr from get realm cell.");
-            return false;
-        }
-        wallsPassed &= cell->Wall; 
-        queTest.pop_front();
-    }
-    if (verbose_flag)
-    {
-        if (wallsPassed)
-            puts("Tinyt: Realm walls test passed.");
-        else
-            puts("Tinyt: Realm walls test failed.");
-    }
-    return wallsPassed;
 }
 
 //-=P.R.I.V.A.T.E.=-
@@ -111,8 +74,7 @@ bool Realm::FillRealm(int distBasic, int level, bool rotation, int dist)
     bool rv = true;
     if (distBasic + dist > std::min(AreaX, AreaY))
     {
-        if (verbose_flag)
-            puts("Tinyt: fill routine coords out of realm.");
+        puts("Tinyt: fill routine coords out of realm.");
         return false;
     }
     if (rotation)
@@ -123,8 +85,7 @@ bool Realm::FillRealm(int distBasic, int level, bool rotation, int dist)
             PCell cellR = Cell(AreaX - (distBasic + dist), indy);
             if (!cellL || !cellR)
             {
-                if (verbose_flag)
-                    printf("Tinyt: fill routine - nullptr cell in Y rotation level %d\n.", level);
+                printf("Tinyt: fill routine - nullptr cell in Y rotation level %d\n.", level);
                 return false;
             }
             cellL->Wall = true;
@@ -138,8 +99,7 @@ bool Realm::FillRealm(int distBasic, int level, bool rotation, int dist)
             PCell cellL = Cell(indx, AreaY - (distBasic + dist));
             if (!cellH || !cellL)
             {
-                if (verbose_flag)
-                    printf("Tinyt: fill routine - nullptr cell in X rotation level %d\n.", level);
+                printf("Tinyt: fill routine - nullptr cell in X rotation level %d\n.", level);
                 return false;
             }
             cellH->Wall = true;

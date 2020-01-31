@@ -23,11 +23,6 @@ CommandBase::CommandBase(Service *svc, int ttl)
     moLink = nullptr;
 }
 
-CommandBase::~CommandBase()
-{
-    
-}
-
 void CommandBase::CltSideUp()
 {
     bCltSideOn = true;
@@ -60,7 +55,7 @@ void CommandBase::Release()
     bCltSideOn = false;
 }
 
-RStatus CommandBase::AddCoords(int X, int Y)
+RStatus CommandBase::AddCoords(__attribute__((unused)) int X, __attribute__((unused)) int Y)
 {
     return RStatus::Unknown;
 }
@@ -92,8 +87,6 @@ RStatus CommandMove::AddCoords(int X, int Y)
         return RStatus::Refuse;
     std::lock_guard<std::mutex> guard(mutDeque);
     points.push_back(std::make_tuple(X, Y));
-    if (verbose_flag)
-        printf("Tinyt: Command %d destination (%d, %d)\n", Id(), X, Y);
     return RStatus::Success;
 }
 
@@ -151,13 +144,6 @@ RStatus CommandMove::Invoke()
     {
         state = EState::Refuse;
         return RStatus::Refuse;
-    }
-    
-    if (verbose_flag)
-    {
-        std::stringstream ssInfo;
-        ssInfo << "Object #" << Executor()->Id << " move to (" << desX << ", " << desY << ") stage " << ctr << ", DX = " << dx <<", DY = " << dy <<std::endl;
-        std::cout << ssInfo.str();
     }
     
    return RStatus::Async;

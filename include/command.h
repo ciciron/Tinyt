@@ -13,7 +13,7 @@ class CommandBase: public ICommand
 {
 public:
     CommandBase(Service *svc, int ttl);
-    virtual ~CommandBase();
+    ~CommandBase() = default;
     virtual ExecutionEnum ExecutionType() const {return ExecutionEnum::Immediate;};
     time_t Eol() const {return eolTime;}
     bool CltSide() const {return bCltSideOn;}

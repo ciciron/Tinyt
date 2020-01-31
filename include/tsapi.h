@@ -29,9 +29,6 @@ public:
     virtual RStatus ExecuteCommand(int commId) = 0;
     virtual void CallbackSet(ICallback *intrfc) = 0;
     virtual void CallbackClear() = 0;
-    //virtual RStatus QueryCommand() = 0;
-    
-    virtual RStatus Test() = 0;
 };
 
 

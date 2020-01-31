@@ -25,17 +25,21 @@ struct MoveableObject
 class Realm 
 {
 public:
-    //Static
+    explicit Realm();
+    Realm(const Realm&) = delete;
+    Realm& operator=(const Realm&) = delete;
+    Realm(Realm&&) = default;
+    Realm& operator=(Realm&&) = default;
+
+    virtual ~Realm() = default;
+    
+    bool BestPlacement(MoveableObject *mo, int desireX, int desireY);
+    PCell Cell(int X, int Y);
+    
     static const int AreaX;
     static const int AreaY;
     static int baseGrid;
-    //Constructor(s)
-    Realm();
-    ~Realm();
-    //Methods
-    bool BestPlacement(MoveableObject *mo, int desireX, int desireY);
-    PCell Cell(int X, int Y);
-    bool Test();
+
 private:
     bool FillRealm(int border, int level, bool rotation = false, int dist = 0);
     bool CellFinder(int X, int Y, int &desireX, int &desireY);

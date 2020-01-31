@@ -21,8 +21,7 @@ bool Client::DoAbuse(int numComms)
     std::future<void> computeComplete = complete.get_future();
     int ctrSuccess, ctrRefuse, ctrOther, ctrReturned;
     auto moIterator = molist.begin();
-    if (moIterator == molist.end())
-    {
+    if (moIterator == molist.end()) {
         puts("Tinyt: No objects for abuse.");
         return true;
     }
@@ -126,11 +125,10 @@ Abuser::Abuser(IServer *inst)
 
 bool Abuser::Add(int desireX, int desireY)
 {
-    int moElementId;
-    RStatus rvCrt;
     std::lock_guard<std::mutex> lock(mutObjs);  
-    rvCrt = service->CreateMoveable(desireX, desireY, moElementId);
-    molist.push_back({moElementId});
+    int moElementId = 0;
+    RStatus rvCrt = service->CreateMoveable(desireX, desireY, moElementId);
+    molist.push_back({moElementId, {}});
     return rvCrt == RStatus::Success;
 }
 

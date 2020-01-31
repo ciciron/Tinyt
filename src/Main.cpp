@@ -82,24 +82,6 @@ int main(int argc, char *argv[])
         puts("Tinyt: Service entry point failed.");
         return -1;
     }
-    if (test_flag)
-    {
-        //Run realm test(s)
-        switch (ies->Test())
-        {
-            case RStatus::Success:
-                puts("Tinyt: Test success.");
-                break;
-            case RStatus::Refuse:
-                puts("Tinyt: Test failed.");
-                break;
-            default:
-                puts("Tinyt: Test return unknown status. WTF?!");
-                break;
-        }
-    }
-    //verbose_flag = 1;
-    //test_flag = 1;
     auto client = Abuser::Create(ies, objects);
     if (client)
     {

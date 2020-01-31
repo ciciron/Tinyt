@@ -38,7 +38,6 @@ public:
     virtual RStatus ExecuteCommand(int commId);
     virtual void CallbackSet(ICallback *intrfc);
     virtual void CallbackClear();    
-    virtual RStatus Test();
     
 private: 
     RStatus Launch(CommandBase *comBase);

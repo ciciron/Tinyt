@@ -18,6 +18,7 @@ struct AsyncMemory
 
 struct Modetu //M.O. + deque + tuple
 {   //one command can be executed at once
+    Modetu() = delete;
     int moId;
     std::deque<std::tuple<int, EState>> mem;
 };

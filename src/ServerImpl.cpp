@@ -7,8 +7,6 @@
 #include "server.h"
 #include "command.h"
 
-extern int verbose_flag;
-
 //Static & API
 IServer *EntryPoint()
 {
@@ -45,14 +43,7 @@ Service::Service()
 };
 
 Service::~Service()
-{
-    if (verbose_flag)
-    {
-        std::stringstream ssInfo;
-        ssInfo << "Tinyt: Destruction. Inque " << comQue.size() << " pcs." << std::endl;
-        std::cout << ssInfo.str();
-    }
-        
+{        
     promTerm.set_value();
     while(!thrds.empty())
     {
@@ -108,8 +99,6 @@ RStatus Service::CreateCommand(Action action, int executorId, int toutSec, IComm
         coRef[0] = ic;
         std::lock_guard<std::mutex> csLock(mutcstore);
         comStore.insert(std::make_pair(ic->Id(), std::move(comm)));
-        if (verbose_flag)
-            printf("Create command #%d, Ex:%d\n",ic->Id(), executorId);
     } catch(...)
     {
         rv = RStatus::Error;
@@ -124,19 +113,10 @@ RStatus Service::ExecuteCommand(int commId)
     RStatus rv = RStatus::Refuse;
     //Check execute twice
     if (comInproc.count(commId) > 0)
-    {
-        if (verbose_flag)
-            printf("Tinyt: Warn. Command %d executing now.", commId);
         return rv;
-        
-    }
     //Check execute completed command
     if (comRdy.count(commId) > 0)
-    {
-        if (verbose_flag)
-            printf("Tinyt: Warn. Command %d has been executed.", commId);
         return rv;
-    }
     auto next = comStore.find(commId);
     if (next != comStore.end())
     {
@@ -169,14 +149,7 @@ RStatus Service::CreateMoveable(int desireX, int desireY, int &moId)
             mo->Id = moId;
             objects.insert(std::make_pair(moId, std::move(mo)));
             rv = RStatus::Success;
-            if (verbose_flag)
-            {
-                printf("Create object #%d at (%d, %d)\n", moId, desireX, desireY);
-            }
-        } else
-            if (verbose_flag)
-                printf("Placement to (%d, %d) failed.\n", desireX, desireY);
-                
+        }       
     } catch (...)
     {
         puts("Tinyt: Create MO failed(except).");
@@ -203,15 +176,6 @@ void Service::CallbackClear()
 }
 
 
-//Realm test routine
-RStatus Service::Test()
-{
-    bool srvcPassed = realm->Test();
-    
-    return srvcPassed ? RStatus::Success : RStatus::Refuse;
-}
-
-
 //-=P.R.I.V.A.T.E.=-
 RStatus Service::Exec(CommandBase *comBase)
 {
@@ -228,8 +192,8 @@ RStatus Service::Launch(CommandBase *comBase)
 size_t Service::Worker()
 {
     std::unique_lock<std::mutex> unimutCapture(mutcstore);
-    RStatus invokeStatus;
-    CommandBase* basic = nullptr;
+    RStatus invokeStatus = RStatus::Error;
+    CommandBase* basic { nullptr };
     size_t rv = 0;
     //std::this_thread::sleep_for(std::chrono::milliseconds(50));
     if (queNotify.wait_for(unimutCapture, std::chrono::milliseconds(50), [this] {return !this->comQue.empty();}))
@@ -242,7 +206,8 @@ size_t Service::Worker()
     } else
         return 0;
     unimutCapture.unlock();
-    invokeStatus = basic->Invoke();
+    if (basic)
+        invokeStatus = basic->Invoke();
     unimutCapture.lock();
     switch(invokeStatus)
     {
@@ -251,8 +216,6 @@ size_t Service::Worker()
             queNotify.notify_one();
             break;
         case RStatus::Refuse:
-            if (verbose_flag)
-                printf("Tinyt: Command #%d refuse.\n", basic->Id());
         case RStatus::Success:
             if (comInproc.count(basic->Id()) > 0)
             {
@@ -260,15 +223,11 @@ size_t Service::Worker()
                 basicShar = std::move(comInproc[basic->Id()]);
                 comInproc.erase(basic->Id());
                 comRdy.insert(std::make_pair(basic->Id(), std::move(basicShar)));
-                if (verbose_flag)
-                    printf("Tinyt: Complete #%d.\n", basic->Id());
                 rv = comRdy.size();
             } else
                 printf("Tinyt: Warn. Command #%d not present in Inproc.\n", basic->Id());
             break;
         default:
-            if (verbose_flag)
-                printf("Tinyt: Command #%d return bad status.\n", basic->Id());
             break;
     }
     return rv;
